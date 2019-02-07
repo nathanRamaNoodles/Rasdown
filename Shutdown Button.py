@@ -67,15 +67,16 @@ btn = Button(buttonGPIO, hold_time = holdTime)
 #########This happens at Startup
 pygame.init()
 playSoundFile(startupSound)
-whiteLED.pulse(fadeRate,fadeRate,None,True)
 while (pygame.mixer.music.get_busy()):  #Wait till our song finishes, then shutdown
+        whiteLED.on() #For some reason, the led doesn't turn on the first time. So putting it in a loop will eventually trigger it
         continue
-whiteLED.on()
 btn.when_held = when_held
 btn.when_pressed = when_pressed
 btn.when_released = when_released
 
 pause()  #This is much better than using an infinite loop
          #and constantly checking if buttons were pressed;
-         #it doesn't drain too much CPU, so that's good.
+         #it doesn't drain any CPU, so that's good.
 #########
+
+
