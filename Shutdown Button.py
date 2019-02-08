@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from gpiozero import Button, PWMLED
+import RPi.GPIO as GPIO
 import pygame.mixer
 from signal import pause
 import time
@@ -47,7 +48,8 @@ def shutdown():
     while (pygame.mixer.music.get_busy()):  #Wait till our song finishes, then shutdown
         continue
     #print("Shutting Down...")
-    os.system("sudo poweroff")
+    os.system("sudo shutdown -h now")
+    os.system("sudo halt")
     
 def playSoundFile(soundFile):
     pygame.mixer.music.load(sys.path[0]+"/"+ soundFile) #we need to load the music file's absolute location, since the terminal doesn't use Shell
@@ -61,22 +63,24 @@ def setVolume(volumeLevel):
 
 
 ########Setup up our GPIO Pins
-whiteLED = PWMLED(ledGPIO)
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(ledGPIO, GPIO.OUT)
 btn = Button(buttonGPIO, hold_time = holdTime)
 
 #########This happens at Startup
 pygame.init()
 playSoundFile(startupSound)
 while (pygame.mixer.music.get_busy()):  #Wait till our song finishes, then shutdown
-        whiteLED.on() #For some reason, the led doesn't turn on the first time. So putting it in a loop will eventually trigger it
+        GPIO.output(ledGPIO, True)
         continue
+whiteLED = PWMLED(ledGPIO)
+whiteLED.on()
 btn.when_held = when_held
 btn.when_pressed = when_pressed
 btn.when_released = when_released
 
 pause()  #This is much better than using an infinite loop
          #and constantly checking if buttons were pressed;
-         #it doesn't drain any CPU, so that's good.
+         #it doesn't drain too much CPU, so that's good.
 #########
-
 
