@@ -49,7 +49,6 @@ def shutdown():
         continue
     #print("Shutting Down...")
     os.system("sudo shutdown -h now")
-    os.system("sudo halt")
     
 def playSoundFile(soundFile):
     pygame.mixer.music.load(sys.path[0]+"/"+ soundFile) #we need to load the music file's absolute location, since the terminal doesn't use Shell
@@ -83,4 +82,3 @@ pause()  #This is much better than using an infinite loop
          #and constantly checking if buttons were pressed;
          #it doesn't drain too much CPU, so that's good.
 #########
-
